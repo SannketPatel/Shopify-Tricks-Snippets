@@ -1,0 +1,38 @@
+{%for link in linklists[list].links%} 
+  
+  {%assign l1__title = link.title%}
+  {%assign l1__url = link.url%}
+  {%assign l1__el = l1__url |append:'|' | append:l1__title %}
+
+  {%if link.object.handle == current%}
+    {%assign crumbs = l1__el %}
+  {%endif%}
+  
+  {%for link in linklists[link.handle].links%}
+  
+    {%assign l2__title = link.title%}
+    {%assign l2__url = link.url%}
+    {%assign l2__el = l2__url |append:'|' | append:l2__title %}
+    
+    {%if link.object.handle == current%}
+      {%assign crumbs = l1__el | append:',' | append:l2__el %}
+    {%endif%}
+
+    {%for link in linklists[link.handle].links%}
+      {%assign l3__title = link.title%}
+      {%assign l3__url = link.url%}
+      {%assign l3__el = l3__url |append:'|' | append:l3__title %}
+      {%if link.object.handle == current%}
+        {%assign crumbs = l1__el | append:',' | append:l2__el | append:','  | append:l3__el %}
+      {%endif%}
+    {%endfor%}
+  {%endfor%}
+{%endfor%}
+
+{%assign crumbs = crumbs | split:','%}
+{% for crumb in crumbs %}
+  <a href="{{crumb | split:'|' | first}}">{{crumb | split:'|' | last}}</a>
+	{% if forloop.last == false %}
+<span> / </span>
+	{% endif %}
+{%endfor%}
